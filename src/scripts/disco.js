@@ -50,6 +50,51 @@ export function createDiscoBall({ radius = 1, facets = 700, tileScale = 1 } = {}
 }
 
 /**
+ * The wireframe globe from the Los Guapos logo, in 3D: meridian and parallel
+ * rings built from real tube geometry so they catch light like polished metal,
+ * around a translucent core that dims the far side for depth.
+ */
+export function createWireGlobe({ radius = 1, meridians = 10 } = {}) {
+  const group = new THREE.Group();
+  const tube = radius * 0.024;
+  const mat = new THREE.MeshStandardMaterial({
+    color: 0xf4eee2,
+    metalness: 0.85,
+    roughness: 0.22,
+    envMapIntensity: 1.3,
+  });
+
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(radius * 0.985, 48, 48),
+    new THREE.MeshBasicMaterial({ color: 0x0a0a12, transparent: true, opacity: 0.55, depthWrite: false })
+  );
+  group.add(core);
+
+  // meridians: vertical rings through the poles
+  for (let i = 0; i < meridians; i++) {
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, tube, 10, 96), mat);
+    ring.rotation.y = (i / meridians) * Math.PI;
+    group.add(ring);
+  }
+
+  // parallels: horizontal rings, shrinking toward the poles
+  for (const lat of [-67.5, -45, -22.5, 0, 22.5, 45, 67.5]) {
+    const phi = (lat * Math.PI) / 180;
+    const ring = new THREE.Mesh(
+      new THREE.TorusGeometry(radius * Math.cos(phi), tube, 10, 96),
+      mat
+    );
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = radius * Math.sin(phi);
+    group.add(ring);
+  }
+
+  // slight tilt, like the logo
+  group.rotation.z = 0.16;
+  return group;
+}
+
+/**
  * Renderer + scene + PMREM environment so the mirrors have something to reflect.
  * Throws if WebGL is unavailable; callers must handle that. The PMREM generator
  * and room scene are disposed immediately; call dispose() on teardown/HMR.

@@ -1,0 +1,108 @@
+---
+// Compact animated logo-globe: used on the links page. Falls back to the 🪩
+// emoji until WebGL is confirmed working (or forever, if it isn't).
+---
+
+<div class="relative mx-auto h-44 w-44">
+  <span
+    id="globe-fallback"
+    class="absolute inset-0 flex items-center justify-center text-6xl"
+    aria-hidden="true">🪩</span
+  >
+  <canvas id="links-globe" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+</div>
+
+<script>
+  import { THREE, createWireGlobe, createDiscoScene } from '../scripts/disco.js';
+
+  window.__linksGlobeCleanup?.();
+
+  const canvas = document.getElementById('links-globe');
+  const fallback = document.getElementById('globe-fallback');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let ctx = null;
+  if (canvas instanceof HTMLCanvasElement) {
+    try {
+      ctx = createDiscoScene(canvas, { fov: 40 });
+    } catch {
+      ctx = null; // keep the emoji
+    }
+  }
+
+  if (ctx && canvas instanceof HTMLCanvasElement) {
+    const { renderer, scene, camera, dispose } = ctx;
+    fallback?.style.setProperty('display', 'none');
+
+    const globe = createWireGlobe({ radius: 1 });
+    scene.add(globe);
+
+    const pink = new THREE.PointLight(0xff2d8d, 20);
+    const ice = new THREE.PointLight(0x9ed2ff, 16);
+    const gold = new THREE.PointLight(0xf5c453, 18);
+    scene.add(pink, ice, gold, new THREE.AmbientLight(0x9090b8, 0.8));
+
+    camera.position.set(0, 0, 3.4);
+
+    function setLights(t) {
+      pink.position.set(Math.sin(t * 0.8) * 3, 1.5, Math.cos(t * 0.8) * 2 + 1.5);
+      ice.position.set(Math.sin(t * 0.6 + 2) * -3, -1, Math.cos(t * 0.6 + 2) * 2 + 1.5);
+      gold.position.set(Math.sin(t * 0.4 + 4) * 2.5, 2, Math.cos(t * 0.4 + 4) * 1.5 + 2);
+    }
+
+    function resize() {
+      const { clientWidth: w, clientHeight: h } = canvas;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      if (reduced) renderStill();
+    }
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
+
+    function renderStill() {
+      globe.rotation.y = 0.7;
+      setLights(2);
+      renderer.render(scene, camera);
+    }
+
+    let raf = 0;
+    let running = false;
+    const t0 = performance.now();
+    function tick() {
+      raf = requestAnimationFrame(tick);
+      const t = (performance.now() - t0) / 1000;
+      globe.rotation.y = t * 0.35;
+      setLights(t);
+      renderer.render(scene, camera);
+    }
+    function start() {
+      if (!running && !reduced) {
+        running = true;
+        tick();
+      }
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    if (reduced) {
+      renderStill();
+    } else {
+      start();
+      const onVis = () => (document.visibilityState === 'hidden' ? stop() : start());
+      document.addEventListener('visibilitychange', onVis);
+      window.__linksGlobeVis = onVis;
+    }
+
+    window.__linksGlobeCleanup = () => {
+      stop();
+      ro.disconnect();
+      if (window.__linksGlobeVis) document.removeEventListener('visibilitychange', window.__linksGlobeVis);
+      dispose();
+    };
+  }
+</script>

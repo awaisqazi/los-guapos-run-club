@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import GlobeScene from '../components/GlobeScene.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -50,7 +51,7 @@ const links = [
     <span class="sparkle text-xl" style="top: 80%; left: 92%; animation-delay: 0.6s">✦</span>
 
     <div class="relative w-full max-w-sm text-center">
-      <p class="text-6xl" aria-hidden="true">🪩</p>
+      <GlobeScene />
       <img
         src={`${base}/assets/wordmark-slash.svg`}
         alt="Guapøs"

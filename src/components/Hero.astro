@@ -104,7 +104,7 @@
 </section>
 
 <script>
-  import { THREE, createDiscoBall, createDiscoScene } from '../scripts/disco.js';
+  import { THREE, createWireGlobe, createDiscoScene } from '../scripts/disco.js';
 
   window.__heroDiscoCleanup?.();
 
@@ -123,7 +123,7 @@
   if (ctx && canvas instanceof HTMLCanvasElement) {
     const { renderer, scene, camera, dispose } = ctx;
 
-    const ball = createDiscoBall({ radius: 1.15, facets: 900 });
+    const ball = createWireGlobe({ radius: 1.15 });
     scene.add(ball);
 
     // hanging wire
