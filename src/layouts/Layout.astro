@@ -1,0 +1,88 @@
+---
+import '@fontsource/anton';
+import '@fontsource/instrument-serif';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/instrument-sans';
+import '../styles/global.css';
+import DiscoCursor from '../components/DiscoCursor.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Los Guapos Run Club · Pilsen, Chicago',
+  description =
+    'Los Guapos Run Club: a community run club out of Pilsen, Chicago. Thursdays 6:30 PM at Pilsen’s Gym, Saturdays in the morning (location varies). All paces welcome, all bodies belong. Come share some miles. ✨🪩✨',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="assets/favicon-64.png" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/assets/logo-full.png`, Astro.site ?? Astro.url)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>{title}</title>
+  </head>
+  <body class="grain">
+    <header class="pointer-events-none absolute inset-x-0 top-0 z-40">
+      <nav
+        aria-label="Main"
+        class="pointer-events-auto mx-auto flex max-w-6xl items-center justify-between px-6 py-5"
+      >
+        <a href="#top" class="neon-script text-2xl" style="font-family: var(--font-serif-display)">Los Guapos</a>
+        <div class="flex items-center gap-6 font-display text-sm tracking-[0.2em] uppercase" style="font-family: var(--font-display)">
+          <a href="#runs" class="hidden text-cream/70 transition-colors hover:text-cream sm:inline">Runs</a>
+          <a href="https://www.instagram.com/los._.guapos/" target="_blank" rel="noopener" class="hidden text-cream/70 transition-colors hover:text-cream sm:inline">Instagram</a>
+          <a href="#join" class="bg-guapo-yellow rounded-full px-5 py-2.5 text-night transition-transform hover:scale-105">Join 🪩</a>
+        </div>
+      </nav>
+    </header>
+
+    <slot />
+
+    {/* floating join pill, appears after the hero */}
+    <a
+      id="floating-join"
+      href="#join"
+      aria-hidden="true"
+      tabindex="-1"
+      class="bg-guapo-yellow pointer-events-none fixed right-5 bottom-5 z-50 translate-y-24 rounded-full px-6 py-3.5 font-display tracking-wider text-night uppercase opacity-0 shadow-[0_8px_40px_rgba(255,214,10,0.45)] transition-all duration-500 hover:scale-105"
+      style="font-family: var(--font-display)"
+    >
+      Join the familia 🪩
+    </a>
+
+    <DiscoCursor />
+
+    <script>
+      const pill = document.getElementById('floating-join');
+      const join = document.getElementById('join');
+      if (pill && join) {
+        let heroGone = false;
+        let joinVisible = false;
+        const update = () => {
+          const show = heroGone && !joinVisible;
+          pill.classList.toggle('opacity-0', !show);
+          pill.classList.toggle('translate-y-24', !show);
+          pill.classList.toggle('pointer-events-none', !show);
+          pill.setAttribute('aria-hidden', String(!show));
+          pill.tabIndex = show ? 0 : -1;
+        };
+        new IntersectionObserver(([e]) => { heroGone = !e.isIntersecting; update(); })
+          .observe(document.getElementById('top') ?? document.body);
+        new IntersectionObserver(([e]) => { joinVisible = e.isIntersecting; update(); })
+          .observe(join);
+      }
+    </script>
+  </body>
+</html>

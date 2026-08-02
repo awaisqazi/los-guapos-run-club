@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "los-guapos-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/fezqazi/Documents/Los Guapos Run Club/los-guapos-site",
+      "port": 4321
+    }
+  ]
+}

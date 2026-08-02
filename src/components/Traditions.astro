@@ -1,0 +1,75 @@
+---
+const accents = ['var(--color-guapo-yellow)', 'var(--color-hot)', 'var(--color-ice)', 'var(--color-neon)', 'var(--color-magenta)', 'var(--color-gold)'];
+const traditions = [
+  {
+    emoji: '🦃',
+    name: 'Turkey Trot',
+    blurb: 'Thanksgiving morning at Pilsen’s Gym, 5k and 1-mile options, cafecito and pan dulce after, plus the toy-drive kickoff.',
+  },
+  {
+    emoji: '🏳️‍🌈',
+    name: 'Pride Run',
+    blurb: 'Wear your favorite color, create a rainbow. Miles past the murals to light up the city.',
+  },
+  {
+    emoji: '🤠',
+    name: 'Themed Runs',
+    blurb: 'Pokémon runs, Bears runs, cowboy runs, Spider-Man runs. Rock the merch, pick your character, chase the miles.',
+  },
+  {
+    emoji: '🗡️',
+    name: 'Trail Season',
+    blurb: 'Revenge missions at Swallow Cliff and Waterfall Glen with the Venados. “Trails have made me a strong runner so let’s get stronger together.”',
+  },
+  {
+    emoji: '🏅',
+    name: 'Race Season',
+    blurb: 'Shamrock Shuffle bibs through Entries for Equity, the Chicago Marathon training block, relays with the whole familia. About trying something new, not being the fastest.',
+  },
+  {
+    emoji: '✌🏽',
+    name: 'Community Miles',
+    blurb: 'Solidarity shakeouts, Friendsgiving with a dozen clubs, brotherhood runs, toy drives. When one of us is threatened, we all show up.',
+  },
+];
+---
+
+<section class="mx-auto max-w-6xl px-6 py-24">
+  <div class="text-center">
+    <p class="neon-script neon-pink text-2xl" style="font-family: var(--font-serif-display)">
+      ✨More than miles✨
+    </p>
+    <h2
+      class="mt-2 font-display text-5xl tracking-wide uppercase sm:text-7xl"
+      style="font-family: var(--font-display)"
+    >
+      Guapøtivities
+    </h2>
+    <p class="mx-auto mt-5 max-w-2xl text-cream/70">
+      Every season has its traditions: pull up in costume, bring a toy, wear
+      your favorite color, chase a trail. Miles &amp; smiles, siempre.
+    </p>
+  </div>
+
+  <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      traditions.map((t, i) => (
+        <article
+          class:list={[
+            'relative overflow-hidden rounded-3xl border border-cream/10 bg-night-soft p-7 transition-transform duration-300 hover:-translate-y-1.5 hover:rotate-0',
+            i % 3 === 0 && 'sticker-l',
+            i % 3 === 2 && 'sticker-r',
+          ]}
+        >
+          <div class="absolute inset-x-0 top-0 h-1" style={`background: ${accents[i % accents.length]}`} />
+          <span class="text-3xl">{t.emoji}</span>
+          <h3 class="mt-4 font-display text-2xl tracking-wide uppercase" style="font-family: var(--font-display)">
+            {t.name}
+          </h3>
+          <p class="mt-3 text-cream/70">{t.blurb}</p>
+          <span class="absolute right-5 bottom-4" style={`color: ${accents[i % accents.length]}`}>✦</span>
+        </article>
+      ))
+    }
+  </div>
+</section>

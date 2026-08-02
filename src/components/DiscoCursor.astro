@@ -1,0 +1,129 @@
+{/* A little three.js mirror ball that replaces the cursor on desktop. */}
+<canvas id="disco-cursor" aria-hidden="true"></canvas>
+
+<style>
+  #disco-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    pointer-events: none;
+    z-index: 100;
+    display: none;
+    transition: opacity 0.2s;
+  }
+</style>
+
+<script>
+  import { THREE, createDiscoBall, createDiscoScene, createTicker } from '../scripts/disco.js';
+
+  // Tear down any previous instance (dev HMR re-runs this module).
+  window.__discoCursorCleanup?.();
+
+  const fine = window.matchMedia('(pointer: fine)').matches;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canvas = document.getElementById('disco-cursor');
+
+  if (fine && !reduced && canvas instanceof HTMLCanvasElement) {
+    let ctx;
+    try {
+      ctx = createDiscoScene(canvas);
+    } catch {
+      // No WebGL: keep the native cursor, render nothing.
+      ctx = null;
+    }
+
+    if (ctx) {
+      const { renderer, scene, camera, dispose } = ctx;
+      const SIZE = 64;
+      renderer.setSize(SIZE, SIZE, false);
+      // Far enough back that the ball fills only ~55% of the canvas at rest,
+      // so the hover scale-up never clips against the canvas edge.
+      camera.position.z = 5;
+
+      const ball = createDiscoBall({ radius: 1, facets: 360 });
+      scene.add(ball);
+
+      const key = new THREE.PointLight(0xfff2d8, 18);
+      key.position.set(3, 3, 4);
+      scene.add(key);
+      const pink = new THREE.PointLight(0xff2d8d, 10);
+      pink.position.set(-3, -2, 3);
+      scene.add(pink);
+      scene.add(new THREE.AmbientLight(0x8888aa, 0.7));
+
+      // Lerped position so the ball glides just behind the pointer.
+      const pos = { x: innerWidth / 2, y: innerHeight / 2 };
+      const target = { ...pos };
+      let scale = 1;
+      let targetScale = 1;
+      let spin = 0.012;
+      let visible = false;
+      let overField = false;
+      let engaged = false; // only hide the native cursor once a pointer proves itself
+      let raf = 0;
+
+      const onMove = (e) => {
+        target.x = e.clientX;
+        target.y = e.clientY;
+        if (!engaged) {
+          engaged = true;
+          document.body.classList.add('disco-cursor-on');
+          canvas.style.display = 'block';
+          pos.x = target.x;
+          pos.y = target.y;
+        }
+        visible = true;
+        const t = e.target instanceof Element ? e.target : null;
+        // The ball would sit on top of the text you're typing; step aside.
+        overField = !!t?.closest('input, textarea, select, label');
+        targetScale = t?.closest('a, button, [data-magnet]') ? 1.45 : 1;
+      };
+      const onDown = () => { spin = 0.14; };
+      const onLeave = () => { visible = false; };
+      const onContextLost = (e) => {
+        e.preventDefault();
+        document.body.classList.remove('disco-cursor-on');
+        canvas.style.display = 'none';
+      };
+
+      addEventListener('pointermove', onMove);
+      addEventListener('pointerdown', onDown);
+      document.documentElement.addEventListener('mouseleave', onLeave);
+      canvas.addEventListener('webglcontextlost', onContextLost);
+
+      const ticker = createTicker();
+      (function tick() {
+        raf = requestAnimationFrame(tick);
+        const dt = ticker.delta();
+        // ~70ms time constant: glides, but stays close enough to click by.
+        const k = 1 - Math.pow(0.000001, dt);
+        pos.x += (target.x - pos.x) * k;
+        pos.y += (target.y - pos.y) * k;
+        scale += (targetScale - scale) * k;
+        spin += (0.012 - spin) * (1 - Math.pow(0.01, dt));
+
+        canvas.style.transform = `translate(${pos.x}px, ${pos.y}px)`;
+        canvas.style.opacity = visible && !overField ? '1' : '0';
+        if (!visible || document.visibilityState === 'hidden') return;
+        ball.rotation.y += spin;
+        ball.rotation.x = 0.35;
+        ball.scale.setScalar(scale);
+        renderer.render(scene, camera);
+      })();
+
+      window.__discoCursorCleanup = () => {
+        cancelAnimationFrame(raf);
+        removeEventListener('pointermove', onMove);
+        removeEventListener('pointerdown', onDown);
+        document.documentElement.removeEventListener('mouseleave', onLeave);
+        canvas.removeEventListener('webglcontextlost', onContextLost);
+        document.body.classList.remove('disco-cursor-on');
+        canvas.style.display = 'none';
+        dispose();
+      };
+    }
+  }
+</script>

@@ -1,0 +1,75 @@
+---
+import JoinForm from './JoinForm.astro';
+---
+
+<section
+  id="join"
+  class="relative overflow-hidden border-t border-cream/10 py-24 sm:py-32"
+  style="background:
+    radial-gradient(900px 500px at 15% 20%, rgba(228, 22, 212, 0.16) 0%, transparent 55%),
+    radial-gradient(900px 500px at 85% 80%, rgba(255, 214, 10, 0.1) 0%, transparent 55%),
+    var(--color-night);"
+>
+  <span class="sparkle text-3xl" style="top: 10%; left: 6%">✦</span>
+  <span class="sparkle text-2xl" style="top: 80%; left: 12%; animation-delay: 1.4s">✧</span>
+  <span class="sparkle text-3xl" style="top: 20%; left: 92%; animation-delay: 0.8s">✦</span>
+
+  <div class="mx-auto grid max-w-6xl items-start gap-14 px-6 lg:grid-cols-2">
+    <div>
+      <p class="neon-script neon-pink text-2xl" style="font-family: var(--font-serif-display)">
+        ✨No tryouts. No fees. No minimum pace.✨
+      </p>
+      <h2
+        class="mt-2 font-display text-5xl tracking-wide uppercase sm:text-6xl"
+        style="font-family: var(--font-display)"
+      >
+        Pull up.<br />Vamos Guapøs.
+      </h2>
+      <p class="mt-6 max-w-md text-lg text-cream/75">
+        Show up to one run and you’re one of us. That’s the whole membership
+        process. Drop your info and we’ll send you each week’s meetup spots,
+        Guapøtivities, and zero spam.
+      </p>
+
+      <ul class="mt-8 max-w-md space-y-4">
+        <li class="flex items-start gap-3">
+          <span class="text-guapo-yellow mt-0.5 text-xl">✦</span>
+          <p class="text-cream/80"><strong class="text-cream">Every pace has a crew.</strong> 1-mile walkers to marathon trainers, nobody runs alone.</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-hot mt-0.5 text-xl">✦</span>
+          <p class="text-cream/80"><strong class="text-cream">The run is half of it.</strong> Cafecito, pan dulce, yoga, banana splits. Stay for the hangs.</p>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="text-ice mt-0.5 text-xl">✦</span>
+          <p class="text-cream/80"><strong class="text-cream">1,300+ Guapøs strong.</strong> A whole familia of Chicago run clubs rolls with us.</p>
+        </li>
+      </ul>
+
+      <div class="relative mt-10 flex items-end gap-2">
+        <img
+          src="assets/crew-selfie.png"
+          alt="Guapøs crew selfie after a run"
+          width="480"
+          height="614"
+          class="floaty w-56 sm:w-72"
+          style="--tilt: -3deg"
+          loading="lazy"
+        />
+        <img
+          src="assets/runner-cowboy.jpg"
+          alt="Guapøs runner in a pink cowboy hat mid-stride"
+          width="500"
+          height="668"
+          class="floaty w-32 rounded-2xl border border-cream/15 shadow-2xl sm:w-40"
+          style="--tilt: 4deg; animation-delay: 1.2s"
+          loading="lazy"
+        />
+      </div>
+    </div>
+
+    <div class="lg:sticky lg:top-24">
+      <JoinForm />
+    </div>
+  </div>
+</section>

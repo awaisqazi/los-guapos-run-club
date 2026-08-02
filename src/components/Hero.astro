@@ -1,0 +1,257 @@
+---
+
+---
+
+<section class="relative min-h-svh overflow-hidden" id="top">
+  {/* nightclub gradient backdrop */}
+  <div
+    class="absolute inset-0 -z-10"
+    style="background:
+      radial-gradient(1200px 700px at 50% -10%, #2a1c4d 0%, transparent 60%),
+      radial-gradient(900px 500px at 85% 30%, rgba(228, 22, 212, 0.18) 0%, transparent 60%),
+      radial-gradient(900px 500px at 12% 55%, rgba(123, 77, 255, 0.16) 0%, transparent 60%),
+      var(--color-night);"
+  >
+  </div>
+
+  {/* light spots thrown off the ball, sweeping the walls */}
+  <div class="disco-spots -z-10"></div>
+
+
+  {/* sprinkled sparkles */}
+  <span class="sparkle text-2xl" style="top: 18%; left: 12%; animation-delay: 0.2s">✦</span>
+  <span class="sparkle text-4xl" style="top: 30%; left: 84%; animation-delay: 1.1s">✦</span>
+  <span class="sparkle text-xl" style="top: 66%; left: 8%; animation-delay: 2s">✧</span>
+  <span class="sparkle text-3xl" style="top: 76%; left: 90%; animation-delay: 0.7s">✦</span>
+  <span class="sparkle text-2xl" style="top: 12%; left: 55%; animation-delay: 1.6s">✧</span>
+
+  <div class="relative z-10 mx-auto flex min-h-svh max-w-6xl flex-col items-center justify-center px-6 pb-32 text-center">
+    <div class="relative h-[36svh] min-h-56 w-full">
+      <canvas id="hero-disco" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+    </div>
+
+    <h1 class="sr-only">Los Guapos Run Club · Pilsen, Chicago</h1>
+    <div class="relative w-full max-w-3xl">
+      <img
+        src="assets/wordmark-slash.svg"
+        alt=""
+        width="582"
+        height="144"
+        class="h-auto w-full drop-shadow-[0_0_60px_rgba(158,210,255,0.35)]"
+      />
+      {/* glowing script layered over the block type, flyer-style */}
+      <p class="neon-script absolute -top-8 left-6 -rotate-6 text-3xl whitespace-nowrap sm:-top-10 sm:text-4xl">
+        Los Guapos
+      </p>
+      <p class="neon-script neon-pink absolute -right-2 -bottom-8 rotate-3 text-2xl sm:-right-6 sm:text-3xl">
+        ✨🪩✨
+      </p>
+    </div>
+
+    <p class="guapo-stamp mt-10 text-sm sm:text-base">✦&nbsp;Run&nbsp;Club&nbsp;·&nbsp;Pilsen&nbsp;·&nbsp;Chicago&nbsp;✦</p>
+
+    <p class="mt-4 max-w-xl text-lg text-cream/80 sm:text-xl">
+      Hola Guapøs! Chicago’s most fun run club rolls out twice a week. Every
+      pace has a group, every run ends together. Runners, walkers, primos,
+      comadres… even doggies. 🐕
+    </p>
+
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a
+        href="#join"
+        class="bg-guapo-yellow rounded-full px-8 py-4 font-display text-lg tracking-wider text-night uppercase shadow-[0_0_40px_rgba(255,214,10,0.35)] transition-transform hover:scale-105"
+        style="font-family: var(--font-display)"
+      >
+        Join the familia 🪩
+      </a>
+      <a
+        href="#runs"
+        class="rounded-full border-2 border-cream/40 px-8 py-4 font-display text-lg tracking-wider uppercase transition-colors hover:border-hot hover:text-hot"
+        style="font-family: var(--font-display)"
+      >
+        See the runs
+      </a>
+    </div>
+
+    <p class="mt-6 text-sm tracking-widest text-cream/50 uppercase">
+      1,300+ Guapøs strong · No fees · No tryouts · Just show up
+    </p>
+  </div>
+
+  {/* ticker */}
+  <div class="absolute bottom-0 left-0 z-10 w-full overflow-hidden border-y border-cream/15 bg-night/70 py-3 backdrop-blur-sm">
+    <div class="marquee-track gap-8 pr-8 font-display text-lg tracking-[0.2em] whitespace-nowrap text-cream/80 uppercase" style="font-family: var(--font-display)">
+      {
+        Array.from({ length: 2 }).map(() => (
+          <span class="flex gap-8">
+            <span>Guapøs don't stop, we keep going</span>
+            <span class="text-gold">✦</span>
+            <span lang="zh" style="font-family: var(--font-sans)">不撓不屈</span>
+            <span class="text-hot">✦</span>
+            <span>All paces welcome · All bodies belong</span>
+            <span class="text-ice">✦</span>
+            <span>Thursdays 6:30 PM · Pilsen's Gym</span>
+            <span class="text-gold">✦</span>
+            <span>Saturdays AM · watch the story</span>
+            <span class="text-hot">✦</span>
+            <span>Come share some miles</span>
+            <span class="text-ice">✦</span>
+          </span>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  import { THREE, createDiscoBall, createDiscoScene } from '../scripts/disco.js';
+
+  window.__heroDiscoCleanup?.();
+
+  const canvas = document.getElementById('hero-disco');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let ctx = null;
+  if (canvas instanceof HTMLCanvasElement) {
+    try {
+      ctx = createDiscoScene(canvas, { fov: 42 });
+    } catch {
+      ctx = null; // no WebGL: the CSS gradient backdrop carries the hero
+    }
+  }
+
+  if (ctx && canvas instanceof HTMLCanvasElement) {
+    const { renderer, scene, camera, dispose } = ctx;
+
+    const ball = createDiscoBall({ radius: 1.15, facets: 900 });
+    scene.add(ball);
+
+    // hanging wire
+    const wire = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.012, 0.012, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0x555568 })
+    );
+    wire.position.set(0, 5.15, 0);
+    scene.add(wire);
+
+    // club lights orbiting the ball
+    const pink = new THREE.PointLight(0xff2d8d, 60);
+    const ice = new THREE.PointLight(0x9ed2ff, 45);
+    const gold = new THREE.PointLight(0xf5c453, 55);
+    scene.add(pink, ice, gold, new THREE.AmbientLight(0x9090b8, 0.55));
+
+    const key = new THREE.SpotLight(0xfff4dd, 260, 30, 0.5, 0.6);
+    key.position.set(0, 8, 6);
+    key.target = ball;
+    scene.add(key);
+
+    // drifting glitter dust
+    const N = 350;
+    const positions = new Float32Array(N * 3);
+    for (let i = 0; i < N; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 14;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 6 - 2;
+    }
+    const dustGeo = new THREE.BufferGeometry();
+    dustGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const dust = new THREE.Points(
+      dustGeo,
+      new THREE.PointsMaterial({
+        color: 0xfff0c8,
+        size: 0.035,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    scene.add(dust);
+
+    camera.position.set(0, 0, 4.4);
+    camera.lookAt(0, 0, 0);
+
+    const pointer = { x: 0, y: 0 };
+    const onPointer = (e) => {
+      pointer.x = (e.clientX / innerWidth) * 2 - 1;
+      pointer.y = (e.clientY / innerHeight) * 2 - 1;
+    };
+    addEventListener('pointermove', onPointer);
+
+    function setLights(t) {
+      pink.position.set(Math.sin(t * 0.7) * 5, 1.5 + Math.sin(t * 0.4), Math.cos(t * 0.7) * 3 + 2);
+      ice.position.set(Math.sin(t * 0.5 + 2) * -5, -0.5, Math.cos(t * 0.5 + 2) * 3 + 2);
+      gold.position.set(Math.sin(t * 0.3 + 4) * 4, 2.5, Math.cos(t * 0.3 + 4) * 2 + 3);
+    }
+
+    function resize() {
+      const { clientWidth: w, clientHeight: h } = canvas;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      if (reduced) renderStill();
+    }
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    resize();
+
+    function renderStill() {
+      ball.rotation.y = 0.4;
+      setLights(2);
+      renderer.render(scene, camera);
+    }
+
+    let raf = 0;
+    let running = false;
+    const t0 = performance.now();
+
+    function tick() {
+      raf = requestAnimationFrame(tick);
+      const t = (performance.now() - t0) / 1000;
+      ball.rotation.y = t * 0.25;
+      setLights(t);
+      dust.rotation.y = t * 0.02;
+      camera.position.x += (pointer.x * 0.5 - camera.position.x) * 0.03;
+      camera.position.y += (-pointer.y * 0.3 - camera.position.y) * 0.03;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+    }
+    function start() {
+      if (!running && !reduced) {
+        running = true;
+        tick();
+      }
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    let io = null;
+    if (reduced) {
+      // Motion-sensitive users get one beautiful still frame.
+      renderStill();
+    } else {
+      // Only burn GPU while the hero is actually on screen.
+      let heroOnScreen = false;
+      io = new IntersectionObserver(([e]) => {
+        heroOnScreen = e.isIntersecting;
+        heroOnScreen ? start() : stop();
+      });
+      io.observe(canvas);
+      const onVis = () => (document.visibilityState === 'hidden' ? stop() : heroOnScreen && start());
+      document.addEventListener('visibilitychange', onVis);
+      window.__heroDiscoVis = onVis;
+    }
+
+    window.__heroDiscoCleanup = () => {
+      stop();
+      io?.disconnect();
+      ro.disconnect();
+      removeEventListener('pointermove', onPointer);
+      if (window.__heroDiscoVis) document.removeEventListener('visibilitychange', window.__heroDiscoVis);
+      dispose();
+    };
+  }
+</script>

@@ -1,0 +1,59 @@
+---
+// Cream flyer-back section: a temperature change between the dark blocks.
+// toBlack flattens white/colored marks to ink so the wall reads as one print.
+const partners = [
+  { src: '/assets/partner-pilsens-gym.png', alt: 'Pilsen’s Gym', name: 'Pilsen’s Gym', w: 317, h: 220, toBlack: true },
+  { src: '/assets/partner-tortugas.png', alt: 'Tortugas Run Club Chicago', name: 'Tortugas RC', w: 327, h: 220, toBlack: true },
+  { src: '/assets/partner-mustangs.png', alt: 'Mustangs Run Club, McKinley Park', name: 'Mustangs RC', w: 233, h: 220 },
+  { src: '/assets/partner-run-it-back.png', alt: 'Run It Back Run Club', name: 'Run It Back', w: 220, h: 220 },
+  { src: '/assets/partner-peace-runners.png', alt: 'Peace Runners', name: 'Peace Runners', w: 271, h: 120 },
+  { src: '/assets/partner-skechers.png', alt: 'Skechers Running', name: 'Skechers Running', w: 412, h: 220, toBlack: true },
+  { src: '/assets/partner-bandit.png', alt: 'Bandit Running', name: 'Bandit', w: 422, h: 160 },
+  { src: '/assets/badge-white.png', alt: 'Time & A Half Relay', name: 'Time & A Half Relay', w: 252, h: 220, toBlack: true },
+];
+---
+
+<section class="bg-cream px-6 py-24 text-night">
+  <div class="mx-auto max-w-6xl">
+    <div class="text-center">
+      <p class="text-magenta font-serif-display text-2xl italic" style="font-family: var(--font-serif-display)">
+        ✨Nobody runs alone✨
+      </p>
+      <h2
+        class="mt-2 font-display text-5xl tracking-wide uppercase sm:text-7xl"
+        style="font-family: var(--font-display)"
+      >
+        La Familia
+      </h2>
+      <p class="mx-auto mt-5 max-w-2xl text-night/70">
+        Guapøs rolls deep with Chicago’s run community: gyms, clubs, and crews
+        we train with, race with, and dance with.
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-2 items-center gap-x-8 gap-y-12 sm:grid-cols-3">
+      {
+        partners.map((p) => (
+          <figure class="flex flex-col items-center gap-3">
+            <img
+              src={p.src}
+              alt={p.alt}
+              width={p.w}
+              height={p.h}
+              loading="lazy"
+              class:list={[
+                'h-20 w-auto max-w-full object-contain opacity-85 transition-opacity hover:opacity-100 sm:h-24',
+                p.toBlack && 'brightness-0',
+              ]}
+            />
+            <figcaption class="text-sm tracking-widest text-night/50 uppercase">{p.name}</figcaption>
+          </figure>
+        ))
+      }
+      <figure class="flex flex-col items-center gap-3">
+        <img src="assets/dove.png" alt="Dove carrying a heart" width="187" height="300" loading="lazy" class="h-20 w-auto sm:h-24" />
+        <figcaption class="text-sm tracking-widest text-night/50 uppercase">+ your crew</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>

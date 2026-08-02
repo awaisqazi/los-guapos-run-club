@@ -1,0 +1,66 @@
+---
+// Their own recurring IG format: numbered "Guapo Lessons".
+const lessons = [
+  {
+    n: '01',
+    text: 'It’s not about how you start, it’s about how you finish!',
+    wash: 'radial-gradient(320px 220px at 85% 0%, rgba(158, 210, 255, 0.35), transparent 65%), linear-gradient(160deg, #123a5e 0%, #0b1d33 60%, #0a0a12 100%)',
+    accent: 'var(--color-ice)',
+  },
+  {
+    n: '02',
+    text: 'Stick to the plan, not the mood!',
+    wash: 'radial-gradient(320px 220px at 10% 0%, rgba(255, 45, 141, 0.4), transparent 65%), linear-gradient(200deg, #5e1240 0%, #330b26 60%, #0a0a12 100%)',
+    accent: 'var(--color-hot)',
+  },
+  {
+    n: '03',
+    text: 'Stop and smell the flowers!',
+    wash: 'radial-gradient(320px 220px at 85% 100%, rgba(198, 255, 79, 0.3), transparent 65%), linear-gradient(160deg, #2c4a12 0%, #17280b 60%, #0a0a12 100%)',
+    accent: 'var(--color-neon)',
+  },
+  {
+    n: '04',
+    text: 'Learn when to take it easy. Easy does it.',
+    wash: 'radial-gradient(320px 220px at 15% 100%, rgba(255, 214, 10, 0.32), transparent 65%), linear-gradient(200deg, #5e4a12 0%, #33280b 60%, #0a0a12 100%)',
+    accent: 'var(--color-guapo-yellow)',
+  },
+];
+---
+
+<section class="relative mx-auto max-w-6xl px-6 py-24">
+  <div class="text-center">
+    <p class="neon-script neon-yellow text-2xl" style="font-family: var(--font-serif-display)">
+      ✨Guapo Lessons✨
+    </p>
+    <h2
+      class="mt-2 font-display text-5xl tracking-wide uppercase sm:text-7xl"
+      style="font-family: var(--font-display)"
+    >
+      Learned on the run
+    </h2>
+  </div>
+
+  <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {
+      lessons.map((l, i) => (
+        <article
+          class:list={[
+            'relative overflow-hidden rounded-3xl border border-cream/15 p-7 transition-transform duration-300 hover:-translate-y-1.5 hover:rotate-0',
+            i % 2 === 0 ? 'sticker-l' : 'sticker-r',
+          ]}
+          style={`background: ${l.wash}`}
+        >
+          <span class="flyer-pill font-display text-2xl" style={`color: ${l.accent}; font-family: var(--font-display)`}>
+            #{l.n}
+          </span>
+          <p class="mt-5 font-serif-display text-2xl italic text-cream/95" style="font-family: var(--font-serif-display)">
+            “{l.text}”
+          </p>
+          <span class="absolute top-5 right-6" style={`color: ${l.accent}`}>✦</span>
+          <span class="absolute bottom-4 left-6 text-xs tracking-[0.3em] text-cream/40 uppercase">Guapo Lesson</span>
+        </article>
+      ))
+    }
+  </div>
+</section>

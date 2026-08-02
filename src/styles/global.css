@@ -1,0 +1,181 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-night: #0a0a12;
+  --color-night-soft: #13131f;
+  --color-cream: #f4eee2;
+  --color-guapo-yellow: #ffd60a; /* the jacket */
+  --color-gold: #f5c453;
+  --color-hot: #ff2d8d;
+  --color-magenta: #e416d4; /* the G.U.A.P.Ø.S post */
+  --color-ice: #9ed2ff;
+  --color-neon: #c6ff4f; /* flyer glow-green */
+  --color-acid: #7b4dff;
+
+  --font-display: 'Anton', 'Arial Narrow', sans-serif;
+  --font-serif-display: 'Instrument Serif', Georgia, serif;
+  --font-sans: 'Instrument Sans Variable', system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-night);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Hide the native cursor on precise pointers — the disco ball takes over */
+@media (pointer: fine) {
+  body.disco-cursor-on,
+  body.disco-cursor-on a,
+  body.disco-cursor-on button {
+    cursor: none;
+  }
+}
+
+::selection {
+  background: var(--color-hot);
+  color: var(--color-night);
+}
+
+/* --- flyer language ------------------------------------------------ */
+
+/* oval outline pill, like the "JUNE 13 2026" ovals on their flyers */
+.flyer-pill {
+  display: inline-block;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  padding: 0.3rem 1.1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* neon-glow script, like the glowing "Los Guapos" over their photos */
+.neon-script {
+  font-family: var(--font-serif-display);
+  font-style: italic;
+  color: var(--color-neon);
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--color-neon) 80%, transparent),
+    0 0 18px color-mix(in srgb, var(--color-neon) 55%, transparent),
+    0 0 42px color-mix(in srgb, var(--color-neon) 35%, transparent);
+}
+.neon-script.neon-yellow {
+  color: var(--color-guapo-yellow);
+  text-shadow:
+    0 0 6px color-mix(in srgb, var(--color-guapo-yellow) 80%, transparent),
+    0 0 18px color-mix(in srgb, var(--color-guapo-yellow) 55%, transparent),
+    0 0 42px color-mix(in srgb, var(--color-guapo-yellow) 35%, transparent);
+}
+.neon-script.neon-pink {
+  color: #ff5ec4;
+  text-shadow:
+    0 0 6px rgba(255, 62, 201, 0.85),
+    0 0 18px rgba(255, 62, 201, 0.55),
+    0 0 42px rgba(255, 62, 201, 0.35);
+}
+
+/* the yellow letter-spaced ✨GUAPØS✨ treatment they stamp on photos */
+.guapo-stamp {
+  font-family: var(--font-display);
+  color: var(--color-guapo-yellow);
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.65);
+}
+
+/* --- marquee ticker --- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-speed, 28s) linear infinite;
+}
+.marquee-reverse .marquee-track {
+  animation-direction: reverse;
+}
+
+/* --- floating sparkle --- */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.7) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(20deg); }
+}
+.sparkle {
+  position: absolute;
+  color: var(--color-guapo-yellow);
+  animation: twinkle 3.4s ease-in-out infinite;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* --- disco light spots sweeping the walls --- */
+@keyframes disco-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.disco-spots {
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  animation: disco-sweep 60s linear infinite;
+  background-image:
+    radial-gradient(14px 10px at 12% 30%, rgba(255, 255, 255, 0.16), transparent 70%),
+    radial-gradient(10px 14px at 78% 18%, rgba(255, 94, 196, 0.2), transparent 70%),
+    radial-gradient(12px 9px at 30% 78%, rgba(158, 210, 255, 0.18), transparent 70%),
+    radial-gradient(9px 12px at 62% 62%, rgba(255, 255, 255, 0.12), transparent 70%),
+    radial-gradient(16px 11px at 88% 84%, rgba(255, 214, 10, 0.14), transparent 70%),
+    radial-gradient(8px 11px at 45% 10%, rgba(255, 255, 255, 0.14), transparent 70%),
+    radial-gradient(11px 8px at 8% 62%, rgba(255, 94, 196, 0.15), transparent 70%),
+    radial-gradient(10px 13px at 55% 88%, rgba(158, 210, 255, 0.14), transparent 70%),
+    radial-gradient(13px 9px at 92% 42%, rgba(255, 255, 255, 0.1), transparent 70%),
+    radial-gradient(9px 9px at 25% 50%, rgba(255, 214, 10, 0.12), transparent 70%);
+}
+
+/* --- soft float for cutouts --- */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+  50% { transform: translateY(-14px) rotate(var(--tilt, 0deg)); }
+}
+.floaty {
+  animation: floaty 6s ease-in-out infinite;
+}
+
+/* sticker energy: independent `rotate` so hover:rotate-0 can override it */
+.sticker-l { rotate: -3deg; }
+.sticker-r { rotate: 2.5deg; }
+
+/* fade marquee rows out at the viewport edges */
+.marquee-mask {
+  mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+}
+
+/* --- film grain over the whole page --- */
+.grain::after {
+  content: '';
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .marquee-track, .sparkle, .floaty, .disco-spots {
+    animation: none;
+  }
+}
