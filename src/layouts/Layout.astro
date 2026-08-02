@@ -9,13 +9,18 @@ import DiscoCursor from '../components/DiscoCursor.astro';
 interface Props {
   title?: string;
   description?: string;
+  /** Bare page: no nav, no floating pill, no disco cursor (e.g. the bio-link page). */
+  minimal?: boolean;
 }
 
 const {
   title = 'Los Guapos Run Club · Pilsen, Chicago',
   description =
     'Los Guapos Run Club: a community run club out of Pilsen, Chicago. Thursdays 6:30 PM at Pilsen’s Gym, Saturdays in the morning (location varies). All paces welcome, all bodies belong. Come share some miles. ✨🪩✨',
+  minimal = false,
 } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <!doctype html>
@@ -23,7 +28,7 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="assets/favicon-64.png" />
+    <link rel="icon" type="image/png" href={`${base}/assets/favicon-64.png`} />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta property="og:title" content={title} />
@@ -34,6 +39,7 @@ const {
     <title>{title}</title>
   </head>
   <body class="grain">
+    {!minimal && (
     <header class="pointer-events-none absolute inset-x-0 top-0 z-40">
       <nav
         aria-label="Main"
@@ -47,10 +53,12 @@ const {
         </div>
       </nav>
     </header>
+    )}
 
     <slot />
 
     {/* floating join pill, appears after the hero */}
+    {!minimal && (
     <a
       id="floating-join"
       href="#join"
@@ -61,8 +69,9 @@ const {
     >
       Join the familia 🪩
     </a>
+    )}
 
-    <DiscoCursor />
+    {!minimal && <DiscoCursor />}
 
     <script>
       const pill = document.getElementById('floating-join');
